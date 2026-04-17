@@ -5,7 +5,7 @@ import { Particles, LightStreak, DotGrid } from './Decorations';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TOTAL_FRAMES = 648;
+const TOTAL_FRAMES = 193;
 const ZOOM_FACTOR = 1;
 
 export default function HeroCanvas() {
