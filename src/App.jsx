@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import Lenis from '@studio-freight/lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import Navbar from './components/Navbar';
 import HeroCanvas from './components/HeroCanvas';
-import StatsBar from './components/StatsBar';
-import Classes from './components/Classes';
-import Trainers from './components/Trainers';
-import Manifesto from './components/Manifesto';
-import Pricing from './components/Pricing';
-import Transformations from './components/Transformations';
-import Location from './components/Location';
-import FAQ from './components/FAQ';
-import Footer from './components/Footer';
+
+// Lazy load sections below the fold
+const StatsBar = lazy(() => import('./components/StatsBar'));
+const Classes = lazy(() => import('./components/Classes'));
+const Trainers = lazy(() => import('./components/Trainers'));
+const Manifesto = lazy(() => import('./components/Manifesto'));
+const Pricing = lazy(() => import('./components/Pricing'));
+const Transformations = lazy(() => import('./components/Transformations'));
+const Location = lazy(() => import('./components/Location'));
+const FAQ = lazy(() => import('./components/FAQ'));
+const Footer = lazy(() => import('./components/Footer'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,15 +60,17 @@ function App() {
     <>
       <Navbar />
       <HeroCanvas />
-      <StatsBar />
-      <Classes />
-      <Trainers />
-      <Manifesto />
-      <Pricing />
-      <Transformations />
-      <Location />
-      <FAQ />
-      <Footer />
+      <Suspense fallback={null}>
+        <StatsBar />
+        <Classes />
+        <Trainers />
+        <Manifesto />
+        <Pricing />
+        <Transformations />
+        <Location />
+        <FAQ />
+        <Footer />
+      </Suspense>
     </>
   );
 }

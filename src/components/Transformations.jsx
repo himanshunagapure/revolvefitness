@@ -74,6 +74,22 @@ export default function Transformations() {
     });
   };
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '400px' }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section style={{ backgroundColor: '#0a0a0a', padding: '120px 0', borderTop: '1px solid #222' }}>
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
@@ -110,7 +126,7 @@ export default function Transformations() {
             <div style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: `url(${activeData.image})`,
+              backgroundImage: isVisible ? `url(${activeData.image})` : 'none',
               backgroundSize: '200% 100%',
               backgroundPosition: 'left center',
               backgroundRepeat: 'no-repeat'
@@ -124,7 +140,7 @@ export default function Transformations() {
             <div style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: `url(${activeData.image})`,
+              backgroundImage: isVisible ? `url(${activeData.image})` : 'none',
               backgroundSize: '200% 100%',
               backgroundPosition: 'right center',
               backgroundRepeat: 'no-repeat',

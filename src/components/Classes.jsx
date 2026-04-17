@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LightSweep, ChevronStack, DotGrid } from './Decorations';
@@ -45,6 +45,37 @@ const CLIP_RIGHT = 'polygon(0% 0%, 94% 0%, 100% 100%, 6% 100%)';
 
 function ClassCard({ cls, height, clipShape }) {
   const cardRef = useRef(null);
+  const videoRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        } else {
+          setIsInView(false);
+        }
+      },
+      { threshold: 0.1, rootMargin: '200px' }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isInView) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isInView]);
 
   const handleEnter = () => {
     const card = cardRef.current;
@@ -98,8 +129,9 @@ function ClassCard({ cls, height, clipShape }) {
 
       {/* Video */}
       <video
-        src={cls.video}
-        autoPlay
+        ref={videoRef}
+        src={isInView ? cls.video : null}
+        preload="none"
         loop
         muted
         playsInline
