@@ -22,7 +22,7 @@ export default function HeroCanvas() {
 
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
-      const frameNum = i.toString().padStart(3, '0');
+      const frameNum = i.toString().padStart(4, '0');
       img.src = `/assets/deadlift-frames/ezgif-frame-${frameNum}.png`;
       img.onload = () => {
         loaded++;
