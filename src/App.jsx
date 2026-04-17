@@ -12,6 +12,7 @@ import Manifesto from './components/Manifesto';
 import Pricing from './components/Pricing';
 import Transformations from './components/Transformations';
 import Location from './components/Location';
+import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -64,6 +65,7 @@ function App() {
       <Pricing />
       <Transformations />
       <Location />
+      <FAQ />
       <Footer />
     </>
   );
