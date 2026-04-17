@@ -22,6 +22,7 @@ export default function HeroCanvas() {
 
     for (let i = 1; i <= TOTAL_FRAMES; i++) {
       const img = new Image();
+      img.fetchPriority = 'high';
       const frameNum = i.toString().padStart(4, '0');
       img.src = `/assets/deadlift-frames/ezgif-frame-${frameNum}.png`;
       img.onload = () => {
@@ -96,17 +97,12 @@ export default function HeroCanvas() {
       }
     });
 
-    // Each beat occupies 25% of scroll distance
-    // Fade in over 4%, hold for 16%, fade out over 4%
-    // Small x slide for entrance polish
     beats.forEach((beat, i) => {
       const start = i * 0.25;
       const fadeIn = 0.04;
       const hold = 0.16;
       const fadeOut = 0.04;
-
-      // Determine slide direction per beat
-      const isRight = i === 2; // beat 3 (CHAMPION) is right-aligned
+      const isRight = i === 2;
       const xFrom = isRight ? 30 : -30;
 
       tl.fromTo(beat,
@@ -114,26 +110,14 @@ export default function HeroCanvas() {
         { opacity: 1, x: 0, duration: fadeIn, ease: 'none' },
         start
       )
-        .to(beat,
-          { opacity: 1, x: 0, duration: hold },
-          start + fadeIn
-        )
-        .to(beat,
-          { opacity: 0, x: isRight ? 30 : -30, duration: fadeOut, ease: 'none' },
-          start + fadeIn + hold
-        );
+        .to(beat, { opacity: 1, x: 0, duration: hold }, start + fadeIn)
+        .to(beat, { opacity: 0, x: isRight ? 30 : -30, duration: fadeOut, ease: 'none' }, start + fadeIn + hold);
     });
 
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 40;
       const y = (e.clientY / window.innerHeight - 0.5) * 40;
-      gsap.to(canvas, {
-        x: -x,
-        y: -y,
-        scale: 1.05,
-        duration: 0.5,
-        ease: 'power2.out'
-      });
+      gsap.to(canvas, { x: -x, y: -y, scale: 1.05, duration: 0.5, ease: 'power2.out' });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -153,12 +137,17 @@ export default function HeroCanvas() {
     }
   }, [isLoaded]);
 
+
   return (
     <div ref={outerWrapperRef} style={{ position: 'relative', height: '500vh' }}>
       {!isLoaded && (
         <div style={{ position: 'fixed', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#080808', color: 'var(--pure-white)', zIndex: 100 }}>
           <div className="bebas" style={{ fontSize: '64px', color: 'var(--primary-red)' }}>LOADING REVOLVE</div>
           <div style={{ fontSize: '14px', letterSpacing: '0.1em', marginTop: '10px' }}>{loadedPercent}% SYNCHRONIZED</div>
+          {/* Thin progress bar */}
+          <div style={{ width: '240px', height: '2px', background: 'rgba(255,255,255,0.1)', marginTop: '20px', borderRadius: '1px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${loadedPercent}%`, background: 'var(--primary-red)', transition: 'width 0.3s ease' }} />
+          </div>
         </div>
       )}
 
